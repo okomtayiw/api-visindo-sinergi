@@ -1,6 +1,6 @@
 <?php
 // required headers
-header("Access-Control-Allow-Origin: http://localhost/apivisindo/api/");
+header("Access-Control-Allow-Origin: http://localhost/apivisindo/");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Max-Age: 3600");
@@ -18,18 +18,16 @@ use \Firebase\JWT\JWT;
 // database connection will be here
 // files needed to connect to database
 include_once '../config/database.php';
-include_once '../objects/user.php';
-include_once '../config/header.php';
+include_once '../objects/package.php';
  
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
  
 // instantiate product object
-$user = new User($db);
+$package = new Package($db);
 $headers = getallheaders();
 $jwt = $headers["Authorization"];
-$idUser = $headers["ID"];
 
 
 if($jwt){
@@ -40,37 +38,33 @@ if($jwt){
  
         if($_SERVER['REQUEST_METHOD'] === "GET"){
 
-                $users = $user->getUser($idUser);
+                $packages = $package->gatPackage();
         
-                if($users > 0){
+                if($packages > 0){
         
-                $users_arr = array();
+                $package_arr = array();
         
-                foreach ($users as $row){
+                foreach ($packages as $row){
         
-                   $users_arr[] = array(
-                     "id" => $row['id'],
-                     "first_name" => $row["first_name"],
-                     "last_name" => $row['last_name'],
-                     "email" => $row["email"],
-                     "number" => $row["number_customers"],
-                     "address" => $row["address_customers"],
-                     "nama_package" =>  $row["name_package"],
-                     "date_installation" =>  $row["date_installation"]
+                   $package_arr[] = array(
+                     "id_package" => $row['id_package'],
+                     "name_package" => $row["name_package"],
+                     "abonemen" => $row['abonemen'],
+                     "descrption" => $row["description"]
                    );
                 }
         
                  http_response_code(200); // Ok
                  echo json_encode(array(
                    "status" => 1,
-                   "data" => $users_arr
+                   "data" => $package_arr
                  ));
         
                 }else{
                     http_response_code(404); // no data found
                     echo json_encode(array(
                     "status" => 0,
-                    "message" => "No Projects found"
+                    "message" => "No Package found"
                     ));
         
                 }

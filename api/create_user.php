@@ -19,39 +19,60 @@ $db = $database->getConnection();
 $user = new User($db);
 
 // get posted data
-$data = json_decode(file_get_contents("php://input"));
+$datas = file_get_contents("php://input");
+$data =  json_encode($datas);
+
  
 // set product property values
 $user->firstname = $data->firstname;
 $user->lastname = $data->lastname;
 $user->email = $data->email;
 $user->password = $data->password;
+$user->numbercustomer = $data->numbercustomer;
+$user->nohp = $data->nohp;
+$number = $user->numberExists();
+$email = $user->emailExists();
+
  
 // use the create() method here
 
-// create the user
-if(
-    !empty($user->firstname) &&
-    !empty($user->email) &&
-    !empty($user->password) &&
-    $user->create()
-){
- 
-    // set response code
-    http_response_code(200);
- 
-    // display message: user was created
-    echo json_encode(array("message" => "User was created."));
+if($number != null || $email != null){
+        // set response code
+        http_response_code(401);
+     
+        // tell the user login failed
+        echo json_encode(array("message" => "User Is ready.")); 
+} else {
+    // create the user
+    if(
+        !empty($user->firstname) &&
+        !empty($user->email) &&
+        !empty($user->password) &&
+        !empty($user->numbercustomer) &&
+        !empty($user->nohp) &&
+        $user->create()
+    ){
+
+    
+    
+        // set response code
+        http_response_code(200);
+    
+        // display message: user was created
+        echo json_encode(array("message" => "User was created."));
+    }
+    
+    // message if unable to create user
+    else{
+    
+        // set response code
+        http_response_code(400);
+        
+        // display message: unable to create user
+        echo json_encode(array("message" => "Unable to create user."));
+    }
 }
- 
-// message if unable to create user
-else{
- 
-    // set response code
-    http_response_code(400);
- 
-    // display message: unable to create user
-    echo json_encode(array("message" => "Unable to create user."));
-}
+
+
 
 ?>
