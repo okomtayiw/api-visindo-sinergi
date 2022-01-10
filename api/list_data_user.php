@@ -1,6 +1,6 @@
 <?php
 // required headers
-header("Access-Control-Allow-Origin: http://localhost/apivisindo/api/");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Max-Age: 3600");
@@ -29,7 +29,7 @@ $db = $database->getConnection();
 $user = new User($db);
 $headers = getallheaders();
 $jwt = $headers["Authorization"];
-$idUser = $headers["ID"];
+
 
 
 if($jwt){
@@ -39,7 +39,7 @@ if($jwt){
         $decoded = JWT::decode($jwt, $key, array('HS256'));
  
         if($_SERVER['REQUEST_METHOD'] === "GET"){
-
+                $idUser = $_GET['ID'];
                 $users = $user->getUser($idUser);
         
                 if($users > 0){
@@ -53,9 +53,10 @@ if($jwt){
                      "first_name" => $row["first_name"],
                      "last_name" => $row['last_name'],
                      "email" => $row["email"],
-                     "number" => $row["number_customers"],
+                     "number" => $row["number_customer"],
                      "address" => $row["address_customers"],
-                     "nama_package" =>  $row["name_package"],
+                     "name_package" =>  $row["name_package"],
+                     "description" => $row["description"],
                      "date_installation" =>  $row["date_installation"]
                    );
                 }

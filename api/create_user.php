@@ -1,6 +1,6 @@
 <?php
 // required headers
-header("Access-Control-Allow-Origin: http://localhost/apivisindo/");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
@@ -20,8 +20,7 @@ $user = new User($db);
 
 // get posted data
 $datas = file_get_contents("php://input");
-$data =  json_encode($datas);
-
+$data =  json_decode($datas);
  
 // set product property values
 $user->firstname = $data->firstname;
@@ -32,6 +31,7 @@ $user->numbercustomer = $data->numbercustomer;
 $user->nohp = $data->nohp;
 $number = $user->numberExists();
 $email = $user->emailExists();
+
 
  
 // use the create() method here
@@ -52,9 +52,6 @@ if($number != null || $email != null){
         !empty($user->nohp) &&
         $user->create()
     ){
-
-    
-    
         // set response code
         http_response_code(200);
     
@@ -72,7 +69,4 @@ if($number != null || $email != null){
         echo json_encode(array("message" => "Unable to create user."));
     }
 }
-
-
-
 ?>

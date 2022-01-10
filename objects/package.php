@@ -50,7 +50,7 @@ class Package{
     }
 
 
-    function gatPackage(){
+    function getPackage(){
         $query = "SELECT * FROM tbl_package ";
 
         $stmt = $this->conn->prepare($query);

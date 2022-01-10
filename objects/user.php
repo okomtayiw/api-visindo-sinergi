@@ -25,7 +25,7 @@ class User{
 function create(){
  
     // insert query
-    $query = "INSERT INTO " . $this->table_name . "
+     $query = "INSERT INTO " . $this->table_name . "
             SET
                 first_name = :firstname,
                 last_name = :lastname,
@@ -201,7 +201,7 @@ public function getUser($idUser){
 
 
     $query = "SELECT * FROM tbl_users
-    LEFT OUTER JOIN tbl_customers ON tbl_customers.number_customers = tbl_users.number_customer
+    LEFT OUTER JOIN tbl_customers ON tbl_customers.number_customer = tbl_users.number_customer
     LEFT OUTER JOIN tbl_package ON tbl_customers.id_package = tbl_package.id_package
     WHERE id =".$idUser;
 

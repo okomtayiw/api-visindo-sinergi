@@ -1,6 +1,6 @@
 <?php
 // required headers
-header("Access-Control-Allow-Origin: http://localhost/apivisindo/");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Max-Age: 3600");
@@ -8,11 +8,13 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 // required to encode json web token
 include_once '../config/core.php';
+include_once '../config/header.php';
 include_once '../libs/php-jwt-master/src/BeforeValidException.php';
 include_once '../libs/php-jwt-master/src/ExpiredException.php';
 include_once '../libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once '../libs/php-jwt-master/src/JWT.php';
 use \Firebase\JWT\JWT;
+
  
  
 // database connection will be here
@@ -29,7 +31,6 @@ $package = new Package($db);
 $headers = getallheaders();
 $jwt = $headers["Authorization"];
 
-
 if($jwt){
  
     try {
@@ -38,7 +39,7 @@ if($jwt){
  
         if($_SERVER['REQUEST_METHOD'] === "GET"){
 
-                $packages = $package->gatPackage();
+                $packages = $package->getPackage();
         
                 if($packages > 0){
         
@@ -47,9 +48,9 @@ if($jwt){
                 foreach ($packages as $row){
         
                    $package_arr[] = array(
-                     "id_package" => $row['id_package'],
+                     "id_package" => $row["id_package"],
                      "name_package" => $row["name_package"],
-                     "abonemen" => $row['abonemen'],
+                     "abonemen" => $row["abonemen"],
                      "descrption" => $row["description"]
                    );
                 }

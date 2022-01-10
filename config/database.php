@@ -5,8 +5,8 @@ class Database{
     // specify your own database credentials
     private $host = "localhost";
     private $db_name = "db_visindo";
-    private $username = "root";
-    private $password = "";
+    private $username = "k0k0";
+    private $password = "pr1@tampan";
     public $conn;
  
     // get the database connection
