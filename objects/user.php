@@ -152,18 +152,15 @@ function numberExists(){
 
 
 // update a user record
-public function update(){
+function update(){
  
-    // if password needs to be updated
-    $password_set=!empty($this->password) ? ", password = :password" : "";
  
-    // if no posted password, do not update the password
     $query = "UPDATE " . $this->table_name . "
             SET
                 first_name = :firstname,
                 last_name = :lastname,
-                email = :email
-                {$password_set}
+                email = :email,
+                no_handphone = :nohp
             WHERE id = :id";
  
     // prepare the query
@@ -173,19 +170,15 @@ public function update(){
     $this->firstname=htmlspecialchars(strip_tags($this->firstname));
     $this->lastname=htmlspecialchars(strip_tags($this->lastname));
     $this->email=htmlspecialchars(strip_tags($this->email));
+    $this->nohp=htmlspecialchars(strip_tags($this->nohp));
  
     // bind the values from the form
     $stmt->bindParam(':firstname', $this->firstname);
     $stmt->bindParam(':lastname', $this->lastname);
     $stmt->bindParam(':email', $this->email);
+    $stmt->bindParam(':nohp', $this->nohp);
  
-    // hash the password before saving to database
-    if(!empty($this->password)){
-        $this->password=htmlspecialchars(strip_tags($this->password));
-        $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
-        $stmt->bindParam(':password', $password_hash);
-    }
- 
+  
     // unique ID of record to be edited
     $stmt->bindParam(':id', $this->id);
  
@@ -197,7 +190,17 @@ public function update(){
     return false;
 }
 
-public function getUser($idUser){
+ function getNumberCustomerExist($number){
+        $query = "SELECT count(number_customer) as tot FROM tbl_customers WHERE number_customer = $number";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
+
+function getUser($idUser){
 
 
     $query = "SELECT * FROM tbl_users

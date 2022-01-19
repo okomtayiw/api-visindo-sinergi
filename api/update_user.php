@@ -24,12 +24,23 @@ $db = $database->getConnection();
  
 // instantiate user object
 $user = new User($db);
+$headers = getallheaders();
+$jwt = $headers["Authorization"];
  
 // get posted data
-$data = json_decode(file_get_contents("php://input"));
+$datas = file_get_contents("php://input");
+$data =  json_decode($datas);
+
  
-// get jwt
-$jwt=isset($data->jwt) ? $data->jwt : "";
+
+ $user->firstname = $data->firstname;
+ $user->lastname = $data->lastname;
+ $user->email = $data->email;
+ $user->id = $data->id;
+ $user->nohp = $data->nohp;
+ $user->numbercustomer = $data->number;
+ 
+ 
  
 // decode jwt here
 // if jwt is not empty
@@ -42,11 +53,7 @@ if($jwt){
         $decoded = JWT::decode($jwt, $key, array('HS256'));
  
                 // set user property values
-        $user->firstname = $data->firstname;
-        $user->lastname = $data->lastname;
-        $user->email = $data->email;
-        $user->password = $data->password;
-        $user->id = $decoded->data->id;
+      
         
         // update the user record
         if($user->update()){
@@ -59,7 +66,7 @@ if($jwt){
                     "id" => $user->id,
                     "firstname" => $user->firstname,
                     "lastname" => $user->lastname,
-                    "email" => $user->email
+                    "number_customer" => $user->numbercustomer
                 )
             );
             $jwt = JWT::encode($token, $key);

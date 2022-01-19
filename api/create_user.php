@@ -31,17 +31,30 @@ $user->numbercustomer = $data->numbercustomer;
 $user->nohp = $data->nohp;
 $number = $user->numberExists();
 $email = $user->emailExists();
-
+$numberExist = $user->getNumberCustomerExist($data->numbercustomer);
 
  
 // use the create() method here
 
-if($number != null || $email != null){
+if($number != null){
         // set response code
         http_response_code(401);
      
         // tell the user login failed
-        echo json_encode(array("message" => "User Is ready.")); 
+        echo json_encode(array("message" => "User With Number Is ready.")); 
+}else if($email != null){
+        // set response code
+        http_response_code(402);
+     
+        // tell the user login failed
+        echo json_encode(array("message" => "User With Email Is ready.")); 
+
+}else if($numberExist == 0) {
+	 http_response_code(403);
+     
+        // tell the user login failed
+        echo json_encode(array("message" => "Number Not Registered")); 
+
 } else {
     // create the user
     if(
